@@ -1,10 +1,10 @@
 import React from "react";
 import { Row, Col, Button, Typography } from "antd";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 import firebase from "@firebase/app-compat";
-import { useNavigate } from "react-router";
 import { GoogleCircleFilled } from "@ant-design/icons";
 import { FacebookFilled } from "@ant-design/icons";
+import { addDocument } from "../firebase/service";
 
 const { Title } = Typography;
 
@@ -16,8 +16,18 @@ const Login = () => {
     auth.signInWithPopup(fbProvider);
   };
 
-  const handleGGLogin = () => {
-    auth.signInWithPopup(ggProvider);
+  const handleGGLogin = async () => {
+    const { additionalUserInfo, user } = await auth.signInWithPopup(ggProvider);
+    console.log({ user });
+    if (additionalUserInfo?.isNewUser) {
+      addDocument("users", {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+        providerId: additionalUserInfo.providerId,
+      });
+    }
   };
 
   return (
