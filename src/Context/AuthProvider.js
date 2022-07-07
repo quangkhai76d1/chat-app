@@ -20,11 +20,11 @@ const AuthProvider = ({ children }) => {
         setUser({ displayName, email, photoURL, uid });
         setIsLoading(false);
         navigate("/");
-      } else {
-        setUser({});
-        setIsLoading(false);
-        navigate("/login");
+        return;
       }
+      setUser({});
+      setIsLoading(false);
+      navigate("/login");
     });
 
     //clean function
