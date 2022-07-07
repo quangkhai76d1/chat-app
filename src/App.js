@@ -8,8 +8,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path='/login' element={<Login />}></Route>
           <Route path='/' element={<ChatRoom />}></Route>
+          <Route path='/login' element={<Login />}></Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

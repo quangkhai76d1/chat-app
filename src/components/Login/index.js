@@ -12,8 +12,6 @@ const ggProvider = new firebase.auth.GoogleAuthProvider();
 const fbProvider = new firebase.auth.FacebookAuthProvider();
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const handleFBLogin = () => {
     auth.signInWithPopup(fbProvider);
   };
@@ -21,14 +19,6 @@ const Login = () => {
   const handleGGLogin = () => {
     auth.signInWithPopup(ggProvider);
   };
-
-  auth.onAuthStateChanged((user) => {
-    console.log({ user });
-    if (user) {
-      navigate("/");
-    }
-    navigate("/login");
-  });
 
   return (
     <div>
