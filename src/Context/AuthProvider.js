@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
-import { auth } from "../components/firebase/config";
+import { auth } from "../firebase/config";
 
 import { useNavigate } from "react-router";
 import { Spin } from "antd";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate();

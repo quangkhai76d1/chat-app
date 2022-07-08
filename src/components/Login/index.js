@@ -1,10 +1,10 @@
 import React from "react";
 import { Row, Col, Button, Typography } from "antd";
-import { auth, db } from "../firebase/config";
+import { auth } from "../../firebase/config";
 import firebase from "@firebase/app-compat";
 import { GoogleCircleFilled } from "@ant-design/icons";
 import { FacebookFilled } from "@ant-design/icons";
-import { addDocument } from "../firebase/service";
+import { addDocument } from "../../firebase/service";
 
 const { Title } = Typography;
 
