@@ -1,19 +1,33 @@
-import React, { useContext, useState } from "react";
-import { Modal, Form, Input } from "antd";
+import React, { useContext } from "react";
+import { Form, Modal, Input } from "antd";
 import { AppContext } from "../../Context/AppProvider";
-import { useForm } from "rc-field-form";
+import { addDocument } from "../../firebase/service";
+import { AuthContext } from "../../Context/AuthProvider";
 
-const AddRoomModal = () => {
-  const { isAddRoomvisible, setIsAddRoomVisible } = useContext(AppContext);
+export default function AddRoomModal() {
+  const { isAddRoomVisible, setIsAddRoomVisible } = useContext(AppContext);
+  const {
+    user: { uid },
+  } = useContext(AuthContext);
   const [form] = Form.useForm();
 
   const handleOk = () => {
-    //add new room
-    console.log({ FormData: form.getFieldValue });
+    // handle logic
+    // add new room to firestore
+
+    // console.log({ FormData: form.getFieldsValue() });
+
+    addDocument("rooms", { ...form.getFieldsValue(), members: [uid] });
+    // reset form value
+    form.resetFields();
+
     setIsAddRoomVisible(false);
   };
 
   const handleCancel = () => {
+    // reset form value
+    form.resetFields();
+
     setIsAddRoomVisible(false);
   };
 
@@ -21,7 +35,7 @@ const AddRoomModal = () => {
     <div>
       <Modal
         title='Tạo phòng'
-        visible={isAddRoomvisible}
+        visible={isAddRoomVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
@@ -36,6 +50,4 @@ const AddRoomModal = () => {
       </Modal>
     </div>
   );
-};
-
-export default AddRoomModal;
+}

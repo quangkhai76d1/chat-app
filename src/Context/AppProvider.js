@@ -6,7 +6,7 @@ import { AuthContext } from "./AuthProvider";
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-  const [isAddRoomvisible, setIsAddRoomVisible] = useState(false);
+  const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
 
   const {
     user: { uid },
@@ -25,7 +25,7 @@ const AppProvider = ({ children }) => {
   console.log({ rooms });
   return (
     <AppContext.Provider
-      value={{ rooms, isAddRoomvisible, setIsAddRoomVisible }}
+      value={{ rooms, isAddRoomVisible, setIsAddRoomVisible }}
     >
       {children}
     </AppContext.Provider>
