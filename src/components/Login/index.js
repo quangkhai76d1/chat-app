@@ -1,24 +1,18 @@
 import React from "react";
 import { Row, Col, Button, Typography } from "antd";
-import { auth } from "../../firebase/config";
 import firebase from "@firebase/app-compat";
-import { GoogleCircleFilled } from "@ant-design/icons";
-import { FacebookFilled } from "@ant-design/icons";
-import { addDocument } from "../../firebase/service";
+import { auth } from "../../firebase/config";
+import { addDocument, generateKeywords } from "../../firebase/service";
 
 const { Title } = Typography;
 
-const ggProvider = new firebase.auth.GoogleAuthProvider();
 const fbProvider = new firebase.auth.FacebookAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 const Login = () => {
-  const handleFBLogin = () => {
-    auth.signInWithPopup(fbProvider);
-  };
+  const handleLogin = async (provider) => {
+    const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
 
-  const handleGGLogin = async () => {
-    const { additionalUserInfo, user } = await auth.signInWithPopup(ggProvider);
-    console.log({ user });
     if (additionalUserInfo?.isNewUser) {
       addDocument("users", {
         displayName: user.displayName,
@@ -26,6 +20,7 @@ const Login = () => {
         photoURL: user.photoURL,
         uid: user.uid,
         providerId: additionalUserInfo.providerId,
+        keywords: generateKeywords(user.displayName?.toLowerCase()),
       });
     }
   };
@@ -34,16 +29,19 @@ const Login = () => {
     <div>
       <Row justify='center' style={{ height: 800 }}>
         <Col span={8}>
-          <Title style={{ textAlign: "center" }}>Chat App</Title>
+          <Title style={{ textAlign: "center" }} level={3}>
+            Fun Chat
+          </Title>
           <Button
             style={{ width: "100%", marginBottom: 5 }}
-            onClick={handleGGLogin}
+            onClick={() => handleLogin(googleProvider)}
           >
-            <GoogleCircleFilled style={{ fontSize: 18 }} />
             Đăng nhập bằng Google
           </Button>
-          <Button style={{ width: "100%" }} onClick={handleFBLogin}>
-            <FacebookFilled style={{ fontSize: 18 }} />
+          <Button
+            style={{ width: "100%" }}
+            onClick={() => handleLogin(fbProvider)}
+          >
             Đăng nhập bằng Facebook
           </Button>
         </Col>

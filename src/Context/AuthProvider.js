@@ -1,33 +1,38 @@
-import React, { createContext, useEffect, useState } from "react";
-import { auth } from "../firebase/config";
-
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { auth } from "../firebase/config";
 import { Spin } from "antd";
+import { createContext } from "react";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscibed = auth.onAuthStateChanged((user) => {
-      console.log({ user });
-
       if (user) {
-        const { displayName, email, photoURL, uid } = user;
-        setUser({ displayName, email, photoURL, uid });
+        const { displayName, email, uid, photoURL } = user;
+        setUser({
+          displayName,
+          email,
+          uid,
+          photoURL,
+        });
         setIsLoading(false);
         navigate("/");
         return;
       }
+
+      // reset user info
       setUser({});
       setIsLoading(false);
       navigate("/login");
     });
 
-    //clean function
+    // clean function
     return () => {
       unsubscibed();
     };
@@ -35,7 +40,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user }}>
-      {isLoading ? <Spin /> : children}
+      {isLoading ? <Spin style={{ position: "fixed", inset: 0 }} /> : children}
     </AuthContext.Provider>
   );
 };

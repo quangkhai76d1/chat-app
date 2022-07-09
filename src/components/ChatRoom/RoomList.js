@@ -53,7 +53,6 @@ const RoomList = () => {
 
   const { rooms, setIsAddRoomVisible, setSelectedRoomId } =
     useContext(AppContext);
-  console.log({ rooms });
 
   const handleAddRoom = () => {
     setIsAddRoomVisible(true);
@@ -67,7 +66,6 @@ const RoomList = () => {
             {room.name}
           </LinkStyled>
         ))}
-
         <Button
           type='text'
           icon={<PlusSquareOutlined />}

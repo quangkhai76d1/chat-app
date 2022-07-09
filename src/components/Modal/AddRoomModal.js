@@ -4,7 +4,7 @@ import { AppContext } from "../../Context/AppProvider";
 import { addDocument } from "../../firebase/service";
 import { AuthContext } from "../../Context/AuthProvider";
 
-export default function AddRoomModal() {
+const AddRoomModal = () => {
   const { isAddRoomVisible, setIsAddRoomVisible } = useContext(AppContext);
   const {
     user: { uid },
@@ -14,10 +14,8 @@ export default function AddRoomModal() {
   const handleOk = () => {
     // handle logic
     // add new room to firestore
-
-    // console.log({ FormData: form.getFieldsValue() });
-
     addDocument("rooms", { ...form.getFieldsValue(), members: [uid] });
+
     // reset form value
     form.resetFields();
 
@@ -50,4 +48,6 @@ export default function AddRoomModal() {
       </Modal>
     </div>
   );
-}
+};
+
+export default AddRoomModal;

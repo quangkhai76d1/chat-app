@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { db } from "../firebase/config";
 
 const useFirestore = (collection, condition) => {
   const [documents, setDocuments] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let collectionRef = db.collection(collection).orderBy("createdAt");
     if (condition) {
       if (!condition.compareValue || !condition.compareValue.length) {
