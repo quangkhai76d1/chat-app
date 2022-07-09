@@ -1,19 +1,19 @@
-import React, { createContext, useMemo, useState } from "react";
+import { useState, createContext, useContext, useMemo } from "react";
 import useFirestore from "../hooks/useFirestore";
-import { useContext } from "react";
 import { AuthContext } from "./AuthProvider";
 
 export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
+  const [isInviteMemberVisible, setIsInviteMemberVisible] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState("");
 
   const {
     user: { uid },
   } = useContext(AuthContext);
 
-  const conditionRooms = useMemo(() => {
+  const roomsCondition = useMemo(() => {
     return {
       fieldName: "members",
       operator: "array-contains",
@@ -21,14 +21,14 @@ const AppProvider = ({ children }) => {
     };
   }, [uid]);
 
-  const rooms = useFirestore("rooms", conditionRooms);
+  const rooms = useFirestore("rooms", roomsCondition);
 
-  const selectedRoom = React.useMemo(
+  const selectedRoom = useMemo(
     () => rooms.find((room) => room.id === selectedRoomId) || {},
     [rooms, selectedRoomId]
   );
 
-  const conditionUsers = useMemo(() => {
+  const usersCondition = useMemo(() => {
     return {
       fieldName: "uid",
       operator: "in",
@@ -36,21 +36,27 @@ const AppProvider = ({ children }) => {
     };
   }, [selectedRoom.members]);
 
-  const members = useFirestore("users", conditionUsers);
+  const members = useFirestore("users", usersCondition);
 
-  console.log({ members, selectedMembers: selectedRoom.members });
+  const clearState = () => {
+    setSelectedRoomId("");
+    setIsAddRoomVisible(false);
+    setIsInviteMemberVisible(false);
+  };
 
-  console.log({ rooms });
   return (
     <AppContext.Provider
       value={{
-        members,
         rooms,
+        members,
+        selectedRoom,
         isAddRoomVisible,
         setIsAddRoomVisible,
         selectedRoomId,
         setSelectedRoomId,
-        selectedRoom,
+        isInviteMemberVisible,
+        setIsInviteMemberVisible,
+        clearState,
       }}
     >
       {children}
